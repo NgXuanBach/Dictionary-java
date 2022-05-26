@@ -1,0 +1,8 @@
+xin chào,hello
+bánh quy,cookie
+cơm,rice
+trường học,school
+bánh kem,cake
+bánh,pie
+sữa,milk
+cơm chiên,fried rice
