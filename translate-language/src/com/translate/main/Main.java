@@ -22,6 +22,8 @@ public class Main {
 	private static Map<String, String> dictionaryEnglish;
 	private static IEnglishDictionaryHandler englishDictionaryHandler;
 	private static IVietnameseDictionaryHandler vietnameseDictionaryHandler;
+	private static int funcionNumber = -1;
+	private static int subFuncionNumber;
 
 	public static void main(String[] args) {
 		englishDictionaryHandler = new EnglishDictionaryHandler();
@@ -30,8 +32,6 @@ public class Main {
 		dictionaryEnglish = new HashMap<>();
 		dictionaryVietNamese = new HashMap<>();
 		dictionaryHandler = new DictionaryHandler();
-		int funcionNumber;
-		int subFuncionNumber;
 		dictionaryHandler.readToMemory(
 				vietnameseDictionaryHandler.listVietnameseDictionary(fileHandler.read(FILE_DICTIONARY)),
 				englishDictionaryHandler.listEnglishDictionary(fileHandler.read(FILE_DICTIONARY)), dictionaryEnglish);
@@ -39,12 +39,12 @@ public class Main {
 				englishDictionaryHandler.listEnglishDictionary(fileHandler.read(FILE_DICTIONARY)),
 				vietnameseDictionaryHandler.listVietnameseDictionary(fileHandler.read(FILE_DICTIONARY)),
 				dictionaryVietNamese);
-		showMainMenu();
-		funcionNumber = scanner.nextInt();
+		funcionNumber = -1;
+		subFuncionNumber = -1;
+		handleMenu();
 		do {
 			switch (funcionNumber) {
 			case 0:
-				System.out.println("End program.");
 				break;
 			case 1:
 				boxSearch(dictionaryVietNamese);
@@ -55,9 +55,8 @@ public class Main {
 			default:
 				System.out.println("Incorrect, please re-enter !");
 			}
-			if (funcionNumber != 0) {
+			if (funcionNumber == 1 || funcionNumber == 2) {
 				do {
-					subFuncionNumber = -1;
 					try {
 						showSubMenu();
 						subFuncionNumber = scanner.nextInt();
@@ -68,15 +67,14 @@ public class Main {
 							break;
 						case 2:
 							System.out.println("Back !");
-							showMainMenu();
-							funcionNumber = scanner.nextInt();
+							handleMenu();
+							break;
 						default:
 							System.out.println("Incorrect, please re-enter !");
 						}
 					} catch (Exception e) {
 						System.out.println("Incorrect, please re-enter !");
 						scanner.next();
-
 					}
 
 				} while (subFuncionNumber != 1 && subFuncionNumber != 2);
@@ -100,5 +98,24 @@ public class Main {
 		String key = scanner.nextLine();
 		dictionaryHandler.boxSearch(key, dictionary);
 		System.out.println("----------------------------------");
+	}
+
+	public static void handleMenu() {
+		while (true) {
+			try {
+				showMainMenu();
+				funcionNumber = scanner.nextInt();
+				if (funcionNumber == 0) {
+					System.out.println("End program.");
+					return;
+				}
+				if (funcionNumber == 1 || funcionNumber == 2) {
+					break;
+				}
+			} catch (Exception e) {
+				System.out.println("Incorrect, please re-enter !");
+				scanner.next();
+			}
+		}
 	}
 }
