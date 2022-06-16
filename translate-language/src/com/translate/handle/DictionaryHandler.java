@@ -1,55 +1,82 @@
 package com.translate.handle;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.translate.constant.Constant;
+import com.translate.model.Languages;
+
 public class DictionaryHandler implements IDictionaryHandler {
+	Map<String, String> dictionary;
+	List<Languages> languages;
 
 	@Override
-	public void add(Map<String, String> data, String key, String value) {
-		data.put(key, value);
+	public Map<String, String> getLanguages() {
+		return dictionary;
 	}
 
 	@Override
-	public String get(Map<String, String> data, String key) {
-		return data.get(key);
+	public void add(String key, String value) {
+		if (dictionary == null)
+			dictionary = new HashMap<>();
+		dictionary.put(key, value);
 	}
 
 	@Override
-	public void readToMemory(List<String> key, List<String> value, Map<String, String> Dictionary) {
-		for (int i = 0; i < key.size(); i++) {
-			Dictionary.put(key.get(i), value.get(i));
+	public String get(String key) {
+		return dictionary.get(key);
+	}
+
+	@Override
+	public void readToMemory(List<String> lineList) {
+		readToFile(lineList);
+		for (int i = 0; i < languages.size(); i++) {
+			add(languages.get(i).getVietnamese(), languages.get(i).getEnglish());
+			add(dictionary.get(languages.get(i).getVietnamese()), languages.get(i).getVietnamese());
 		}
 	}
 
 	@Override
-	public void searchLike(String findKey, Map<String, String> Dictionary) {
-		for (String line : Dictionary.keySet()) {
+	public void searchLike(String findKey) {
+		for (String line : dictionary.keySet()) {
 			if (findKey.toLowerCase().contains(line.toLowerCase()) || line.toLowerCase().contains(findKey.toLowerCase())
-					|| Dictionary.get(findKey).toLowerCase().contains(Dictionary.get(line).toLowerCase())
-					|| Dictionary.get(line).toLowerCase().contains(Dictionary.get(findKey).toLowerCase())) {
-				System.out.println(line + " = " + Dictionary.get(line));
+					|| dictionary.get(findKey).toLowerCase().contains(dictionary.get(line).toLowerCase())
+					|| dictionary.get(line).toLowerCase().contains(dictionary.get(findKey).toLowerCase())) {
+				System.out.println(line + " = " + dictionary.get(line));
 			}
 		}
 	}
 
 	@Override
-	public void search(String key, Map<String, String> Dictionary) {
-		if (Dictionary.get(key) == null)
+	public void search(String key) {
+		if (dictionary.get(key) == null)
 			System.out.println("This word has not been added to the dictionary yet !!");
 		else
-			System.out.println("---> " + Dictionary.get(key));
+			System.out.println("---> " + dictionary.get(key));
 	}
 
 	@Override
-	public void boxSearch(String key, Map<String, String> Dictionary) {
-		search(key, Dictionary);
-		if (Dictionary.get(key) == null)
+	public void boxSearch(String key) {
+		search(key);
+		if (dictionary.get(key) == null)
 			return;
 		else {
 			System.out.println("List of relative words: ");
-			searchLike(key, Dictionary);
+			searchLike(key);
 		}
+	}
+
+	@Override
+	public void readToFile(List<String> lineList) {
+		languages = new ArrayList<>();
+		for (String line : lineList) {
+			String[] list = line.split(Constant.REGEX_SPLIT_STRING);
+			Languages language = new Languages(list[0], list[1]);
+			languages.add(language);
+		}
+
 	}
 
 }

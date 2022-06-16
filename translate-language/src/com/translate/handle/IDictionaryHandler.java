@@ -4,15 +4,19 @@ import java.util.List;
 import java.util.Map;
 
 public interface IDictionaryHandler {
-	public void add(Map<String, String> data, String key, String value);
+	public Map<String, String> getLanguages();
 
-	public String get(Map<String, String> data, String key);
+	public void add(String key, String value);
 
-	public void readToMemory(List<String> key, List<String> value, Map<String, String> Dictionary);
+	public String get(String key);
 
-	public void searchLike(String line, Map<String, String> Dictionary);
+	public void readToMemory(List<String> lineList);
 
-	public void search(String key, Map<String, String> Dictionary);
+	public void searchLike(String line);
 
-	public void boxSearch(String key, Map<String, String> Dictionary);
+	public void search(String key);
+
+	public void boxSearch(String key);
+
+	public void readToFile(List<String> lineList);
 }

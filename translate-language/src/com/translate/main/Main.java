@@ -1,56 +1,34 @@
 package com.translate.main;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import java.util.Scanner;
 
 import com.translate.handle.DictionaryHandler;
-import com.translate.handle.EnglishDictionaryHandler;
 import com.translate.handle.FileHandler;
 import com.translate.handle.IDictionaryHandler;
-import com.translate.handle.IEnglishDictionaryHandler;
 import com.translate.handle.IFileHandler;
-import com.translate.handle.IVietnameseDictionaryHandler;
-import com.translate.handle.VietnameseDictionaryHandler;
 
 public class Main {
 	private static Scanner scanner = new Scanner(System.in);
 	private static final String FILE_DICTIONARY = "D:/java-workspace/translate-language/src/com/translate/main/Dictionary.txt";
 	private static IDictionaryHandler dictionaryHandler;
-	private static Map<String, String> dictionaryVietNamese;
-	private static Map<String, String> dictionaryEnglish;
-	private static IEnglishDictionaryHandler englishDictionaryHandler;
-	private static IVietnameseDictionaryHandler vietnameseDictionaryHandler;
 	private static int funcionNumber = -1;
 	private static int subFuncionNumber;
 
 	public static void main(String[] args) {
-		englishDictionaryHandler = new EnglishDictionaryHandler();
-		vietnameseDictionaryHandler = new VietnameseDictionaryHandler();
 		IFileHandler fileHandler = new FileHandler();
-		dictionaryEnglish = new HashMap<>();
-		dictionaryVietNamese = new HashMap<>();
 		dictionaryHandler = new DictionaryHandler();
-		dictionaryHandler.readToMemory(
-				vietnameseDictionaryHandler.listVietnameseDictionary(fileHandler.read(FILE_DICTIONARY)),
-				englishDictionaryHandler.listEnglishDictionary(fileHandler.read(FILE_DICTIONARY)), dictionaryEnglish);
-		dictionaryHandler.readToMemory(
-				englishDictionaryHandler.listEnglishDictionary(fileHandler.read(FILE_DICTIONARY)),
-				vietnameseDictionaryHandler.listVietnameseDictionary(fileHandler.read(FILE_DICTIONARY)),
-				dictionaryVietNamese);
+		dictionaryHandler.readToMemory(fileHandler.read(FILE_DICTIONARY));
 		funcionNumber = -1;
-		subFuncionNumber = -1;
 		handleMenu();
 		do {
 			switch (funcionNumber) {
 			case 0:
 				break;
 			case 1:
-				boxSearch(dictionaryVietNamese);
+				boxSearch();
 				break;
 			case 2:
-				boxSearch(dictionaryEnglish);
+				boxSearch();
 				break;
 			default:
 				System.out.println("Incorrect, please re-enter !");
@@ -58,6 +36,7 @@ public class Main {
 			if (funcionNumber == 1 || funcionNumber == 2) {
 				do {
 					try {
+						subFuncionNumber = -1;
 						showSubMenu();
 						subFuncionNumber = scanner.nextInt();
 						switch (subFuncionNumber) {
@@ -92,11 +71,11 @@ public class Main {
 		System.out.println("Please enter the funcion.\n1. Language Swap\r\n" + "2. Back\r\n" + "");
 	}
 
-	public static void boxSearch(Map<String, String> dictionary) {
+	public static void boxSearch() {
 		System.out.println("enter the word you want to find: ");
 		scanner.nextLine();
 		String key = scanner.nextLine();
-		dictionaryHandler.boxSearch(key, dictionary);
+		dictionaryHandler.boxSearch(key);
 		System.out.println("----------------------------------");
 	}
 
@@ -110,7 +89,7 @@ public class Main {
 					return;
 				}
 				if (funcionNumber == 1 || funcionNumber == 2) {
-					break;
+					return;
 				}
 			} catch (Exception e) {
 				System.out.println("Incorrect, please re-enter !");
